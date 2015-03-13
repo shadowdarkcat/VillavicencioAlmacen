@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       ">
+    
+    <bean id="notaVentaService" class="mx.com.villavicencio.almacen.system.venta.nota.nota.bo.impl.NotaVentaBoImpl">
+        <property name="notaVentaDao" ref="notaVentaDao" />
+        <property name="detalleNotaVentaBo" ref="detalleNotaVentaService" />
+        <property name="cargosBo" ref="cargosService" />
+        <property name="movimientosBo" ref="movimientosService" />
+        <property name="pedidoBo" ref="pedidoService" />
+        <property name="datosBo" ref="datosPedidoService" />
+        <property name="clienteBo" ref="clienteService" />
+        <property name="vendedorBo" ref="vendedoresService" />
+    </bean>
+    <bean id="notaVentaDao" class="mx.com.villavicencio.almacen.system.venta.nota.nota.dao.impl.NotaVentaDaoImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+</beans>

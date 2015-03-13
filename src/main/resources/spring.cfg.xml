@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       ">
+    <import resource="mx/com/villavicencio/almacen/spring/datasource.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/usuario.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/menu.xml" />    
+    <import resource="mx/com/villavicencio/almacen/spring/pedidos.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/cliente.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/creditos.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/datos.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/datosCredito.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/datosPedido.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/detallePedido.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/producto.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/vendedor.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/inventario.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/cargos.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/movimientos.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/notaVenta.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/detalleNotaVenta.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/devoluciones.xml" />
+    <import resource="mx/com/villavicencio/almacen/spring/detalleDevoluciones.xml" />
+</beans>

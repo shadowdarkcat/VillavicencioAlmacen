@@ -1,7 +1,6 @@
 package mx.com.villavicencio.almacen.utils;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.Random;
 import javax.swing.JOptionPane;
 import jpos.JposConst;
@@ -15,7 +14,6 @@ import jpos.events.OutputCompleteListener;
 import jpos.events.StatusUpdateEvent;
 import jpos.events.StatusUpdateListener;
 import jpos.util.JposPropertiesConst;
-import mx.com.villavicencio.almacen.commons.exception.ApplicationException;
 import mx.com.villavicencio.almacen.commons.messages.ApplicationMessages;
 import mx.com.villavicencio.almacen.properties.PropertiesBean;
 import mx.com.villavicencio.almacen.properties.Property;
@@ -102,7 +100,7 @@ public class Ticket implements OutputCompleteListener, StatusUpdateListener, Err
                     String nombre = detalles.getNombreProducto() + space(detalles.getNombreProducto(), spaceMayor);
                     String kilos = NumberUtils.formatMiles(detalles.getCantidadKilos());
                     if(kilos.length() == 1){
-                        kilos += "            ";
+                        kilos += "       ";
                     } else if (kilos.length() == 2) {
                         kilos += "      ";
                     }else if (kilos.length() == 3) {

@@ -236,6 +236,10 @@ public class NotaVentaController extends HttpServlet {
             notaVenta.setIdNotaVenta(NumberUtils.stringToNumber(request.getParameter(Text.ID_NOTA_VENTA)));
         }
 
+        if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.ID_CREDITO))) {
+            notaVenta.setIdCredito(NumberUtils.stringToNumber(request.getParameter(Text.ID_CREDITO)));
+        }
+
         if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.FECHA))) {
             notaVenta.setFecha(DateUtils.stringToDate(request.getParameter(Text.FECHA)));
         }
@@ -259,12 +263,12 @@ public class NotaVentaController extends HttpServlet {
         if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.USER))
                 && (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.TIPO_AUTORIZACION)))) {
             notaVenta.setObservaciones("UTORIZADO POR "
-                    + request.getParameter(Text.USER) + " , MOTIVO :" + request.getParameter(Text.TIPO_AUTORIZACION).toUpperCase());
+                    + request.getParameter(Text.USER) + ". " + request.getParameter(Text.TIPO_AUTORIZACION).toUpperCase());
         }
 
-        if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.AUTORIZADO))) {
-            notaVenta.setObservaciones(request.getParameter(Text.AUTORIZADO));
-        }
+        /*if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.AUTORIZADO))) {
+         notaVenta.setObservaciones(request.getParameter(Text.AUTORIZADO));
+         }*/
         if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.STATUS_NOTA_VENTA))) {
             notaVenta.setStatusNotaVenta(request.getParameter(Text.STATUS_NOTA_VENTA).charAt(GenericTypes.ZERO));
         }
@@ -378,9 +382,15 @@ public class NotaVentaController extends HttpServlet {
                 }
                 if (!StringUtils.isReallyEmptyOrNull(observacionesExcedido)) {
                     if (observacionesExcedido.length > index) {
-                        String numberToString = StringUtils.numberToString(NumberUtils.stringToBigDecimal(observacionesExcedido[index]));
-                        String text = "Se excedio por " + numberToString + " pzas.";
-                        detalleNotaVenta.setObservacionExcedido(text.toUpperCase());
+                        if ((!StringUtils.isReallyEmptyOrNull(observacionesExcedido[index]))) {
+                            if (NumberUtils.stringToNumber(observacionesExcedido[index]) != 0) {
+                                String numberToString = StringUtils.numberToString(NumberUtils.stringToBigDecimal(observacionesExcedido[index]));
+                                String text = "Se excedio por " + numberToString + " pzas.";
+                                detalleNotaVenta.setObservacionExcedido(text.toUpperCase());
+                            } else {
+                                detalleNotaVenta.setObservacionExcedido(GenericTypes.NONE);
+                            }
+                        }
                     }
                 }
                 detalles.add(detalleNotaVenta);

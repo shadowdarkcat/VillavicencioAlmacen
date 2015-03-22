@@ -55,7 +55,7 @@ public class Text {
     public static final String DIRECCION = "txtDireccion";
 
     public static final String RFC = "txtRrfc";
-    public static final String TIPO_AUTORIZACION = "txtTipoAutorizacion";
+    public static final String TIPO_AUTORIZACION = "txtCausa";
 
     public static final String ID_NOTA_VENTA = "txtIdNotaVenta";
     public static final String ARRAY_CHK_AGOTADO = "arrayChkAgotado[]";
@@ -73,4 +73,5 @@ public class Text {
     public static final String ARRAY_EXCEDIDO = "txtArrayExcedido[]";
     
     public static final String OBSERVACION_EXCEDIDO = "txtObservacionExcedido[]";
+    public static final String ID_CREDITO = "txtIdCredito";
 }

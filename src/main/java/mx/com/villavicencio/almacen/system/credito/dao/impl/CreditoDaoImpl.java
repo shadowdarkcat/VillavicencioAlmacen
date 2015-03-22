@@ -2,12 +2,15 @@ package mx.com.villavicencio.almacen.system.credito.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Collection;
 import mx.com.villavicencio.almacen.commons.exception.ApplicationException;
+import mx.com.villavicencio.almacen.commons.jdbc.Jdbc;
 import mx.com.villavicencio.almacen.commons.messages.ApplicationMessages;
 import mx.com.villavicencio.almacen.properties.PropertiesBean;
 import mx.com.villavicencio.almacen.properties.Property;
 import mx.com.villavicencio.almacen.system.credito.dao.CreditoDao;
+import mx.com.villavicencio.almacen.system.credito.dao.sql.procedure.Procedure;
 import mx.com.villavicencio.almacen.system.credito.dao.sql.sql.SqlCredito;
 import mx.com.villavicencio.almacen.system.credito.dao.sql.view.View;
 import mx.com.villavicencio.almacen.system.credito.dto.DtoCredito;
@@ -16,6 +19,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 /**
@@ -84,9 +90,14 @@ public class CreditoDaoImpl extends JdbcDaoSupport implements CreditoDao {
 
     @Override
     public void modificar(DtoCredito object) {
-        ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO)
-                + CreditoDaoImpl.class.getSimpleName());
-        throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO));
+        try {
+            SimpleJdbcCall simpleJdbcCall = Jdbc.getSimpleJdbcCall(getJdbcTemplate(), Procedure.PROCEDURE_CREDITO);
+            simpleJdbcCall.execute(getParameterProcedure(object));
+        } catch (DataAccessException ex) {
+            ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.ERROR_MODIFY)
+                    + CreditoDaoImpl.class.getSimpleName(), ex);
+            throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.ERROR_MODIFY));
+        }
     }
 
     @Override
@@ -94,6 +105,19 @@ public class CreditoDaoImpl extends JdbcDaoSupport implements CreditoDao {
         ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO)
                 + CreditoDaoImpl.class.getSimpleName());
         throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO));
+    }
+    
+    private SqlParameterSource getParameterProcedure(DtoCredito object) {
+        MapSqlParameterSource source = new MapSqlParameterSource();
+        source.addValue(SqlCredito.OPCION, object.getOpcion(), Types.INTEGER);
+        source.addValue(SqlCredito.ID_CREDITO, object.getIdCredito(), Types.INTEGER);
+        source.addValue(SqlCredito.TIPO_CREDITO, object.getTipoCredito(), Types.VARCHAR);
+        source.addValue(SqlCredito.FECHA_REGISTRO, object.getFechaRegistro(), Types.DATE);
+        source.addValue(SqlCredito.FECHA_PAGO, object.getFechaPago(), Types.DATE);
+        source.addValue(SqlCredito.FOLIO_NOTA, object.getFolioNota(), Types.VARCHAR);
+        source.addValue(SqlCredito.CANTIDAD_MONETARIA, object.getCantidadMonetaria(), Types.DECIMAL);
+        source.addValue(SqlCredito.ESTATUS_CREDITO, object.getEstatusCredito(), Types.VARCHAR);
+        return source;
     }
 
     private static class CreditoRowMapper implements RowMapper<DtoCredito> {

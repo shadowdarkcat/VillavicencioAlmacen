@@ -15,6 +15,7 @@ public class DtoNotaVenta {
     private Integer idNotaVenta;
     private String folio;
     private Date fecha;
+    private Integer idCredito;
     private String nombreCliente;
     private String direccion;
     private String rfc;
@@ -137,5 +138,13 @@ public class DtoNotaVenta {
 
     public void setOpcion(Integer opcion) {
         this.opcion = opcion;
+    }   
+
+    public Integer getIdCredito() {
+        return idCredito;
+    }
+
+    public void setIdCredito(Integer idCredito) {
+        this.idCredito = idCredito;
     }
 }

@@ -1,5 +1,6 @@
 package mx.com.villavicencio.almacen.system.pedidos.pedido.bo.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -27,7 +28,12 @@ import mx.com.villavicencio.almacen.system.usuario.dto.DtoUsuario;
 import mx.com.villavicencio.almacen.system.vendedor.bo.VendedorBo;
 import mx.com.villavicencio.almacen.system.vendedor.dto.DtoVendedor;
 import mx.com.villavicencio.almacen.system.vendedor.factory.VendedorFactory;
+import mx.com.villavicencio.almacen.system.venta.nota.detalle.dto.DtoDetalleNotaVenta;
+import mx.com.villavicencio.almacen.system.venta.nota.nota.bo.NotaVentaBo;
+import mx.com.villavicencio.almacen.system.venta.nota.nota.dto.DtoNotaVenta;
+import mx.com.villavicencio.almacen.system.venta.nota.nota.factory.NotaVentaFactory;
 import mx.com.villavicencio.almacen.utils.NumberUtils;
+import mx.com.villavicencio.almacen.utils.StringUtils;
 
 /**
  *
@@ -41,6 +47,7 @@ public class PedidoBoImpl implements PedidoBo {
     private ClienteBo clienteBo;
     private VendedorBo vendedorBo;
     private InventarioBo inventarioBo;
+    private NotaVentaBo notaVentaBo;
 
     @Override
     public Collection<DtoPedido> findAll(DtoUsuario user) {
@@ -54,9 +61,11 @@ public class PedidoBoImpl implements PedidoBo {
                 if ((datos.getIdCliente() != null) && (datos.getIdCliente() != 0)) {
                     DtoCliente cliente = ClienteFactory.newInstance(datos.getIdCliente());
                     pedido.setCliente(this.clienteBo.findById(user, cliente));
-                } else if ((datos.getIdVendedor()!= null) && (datos.getIdVendedor() != 0)) {
+                    pedido = findCredito(user, pedido);
+                } else if ((datos.getIdVendedor() != null) && (datos.getIdVendedor() != 0)) {
                     DtoVendedor vendedor = VendedorFactory.newInstance(datos.getIdVendedor());
                     pedido.setVendedor(this.vendedorBo.findById(user, vendedor));
+                    pedido = findCredito(user, pedido);
                 }
                 collection.add(pedido);
             }
@@ -102,6 +111,70 @@ public class PedidoBoImpl implements PedidoBo {
             ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.ACCESO_DENEGADO));
             throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.ACCESO_DENEGADO));
         }
+    }
+
+    @Override
+    public DtoPedido findCredito(DtoUsuario user, DtoPedido object) {
+        if ((object.getCliente().getCredito() != null) && (!StringUtils.isReallyEmptyOrNull(object.getCliente().getCredito().getFolioNota()))) {
+            if (("PLAZO".equals(object.getCliente().getCredito().getTipoCredito())) || ("MONETARIO".equals(object.getCliente().getCredito().getTipoCredito()))) {
+                BigDecimal cargo = BigDecimal.ZERO;
+                BigDecimal credito = object.getCliente().getCredito().getCantidadMonetaria();
+                BigDecimal disponible;
+                if (!object.getCliente().getCredito().getFolioNota().contains(",")) {
+                    DtoNotaVenta notaVenta = NotaVentaFactory.newInstance();
+                    notaVenta.setFolio(object.getCliente().getCredito().getFolioNota());
+                    notaVenta.setIdNotaVenta(this.notaVentaBo.findByFolio(user, notaVenta));
+                    notaVenta = this.notaVentaBo.findById(user, notaVenta);
+                    for (DtoDetalleNotaVenta detalles : notaVenta.getDetalles()) {
+                        cargo = cargo.add(detalles.getSubTotal());
+                    }
+                    disponible = credito.subtract(cargo);
+                    object.getCliente().setCantidadMonetaria(disponible);
+                } else {
+                    for (String str : StringUtils.split(object.getCliente().getCredito().getFolioNota())) {
+                        DtoNotaVenta notaVenta = NotaVentaFactory.newInstance();
+                        notaVenta.setFolio(str);
+                        notaVenta.setIdNotaVenta(this.notaVentaBo.findByFolio(user, notaVenta));
+                        notaVenta = this.notaVentaBo.findById(user, notaVenta);
+                        for (DtoDetalleNotaVenta detalles : notaVenta.getDetalles()) {
+                            cargo = cargo.add(detalles.getSubTotal());
+                        }
+                    }
+                    disponible = credito.subtract(cargo);
+                    object.getCliente().setCantidadMonetaria(disponible);
+                }
+            }
+        } else if ((object.getVendedor().getCredito() != null) && (!StringUtils.isReallyEmptyOrNull(object.getVendedor().getCredito().getFolioNota()))) {
+            if (("PLAZO".equals(object.getVendedor().getCredito().getTipoCredito())) || ("MONETARIO".equals(object.getVendedor().getCredito().getTipoCredito()))) {
+                BigDecimal cargo = BigDecimal.ZERO;
+                BigDecimal credito = object.getVendedor().getCredito().getCantidadMonetaria();
+                BigDecimal disponible;
+                if (!object.getVendedor().getCredito().getFolioNota().contains(",")) {
+                    DtoNotaVenta notaVenta = NotaVentaFactory.newInstance();
+                    notaVenta.setFolio(object.getVendedor().getCredito().getFolioNota());
+                    notaVenta.setIdNotaVenta(this.notaVentaBo.findByFolio(user, notaVenta));
+                    notaVenta = this.notaVentaBo.findById(user, notaVenta);
+                    for (DtoDetalleNotaVenta detalles : notaVenta.getDetalles()) {
+                        cargo = cargo.add(detalles.getSubTotal());
+                    }
+                    disponible = credito.subtract(cargo);
+                    object.getVendedor().setCantidadMonetaria(disponible);
+                } else {
+                    for (String str : StringUtils.split(object.getCliente().getCredito().getFolioNota())) {
+                        DtoNotaVenta notaVenta = NotaVentaFactory.newInstance();
+                        notaVenta.setFolio(str);
+                        notaVenta.setIdNotaVenta(this.notaVentaBo.findByFolio(user, notaVenta));
+                        notaVenta = this.notaVentaBo.findById(user, notaVenta);
+                        for (DtoDetalleNotaVenta detalles : notaVenta.getDetalles()) {
+                            cargo = cargo.add(detalles.getSubTotal());
+                        }
+                    }
+                    disponible = credito.subtract(cargo);
+                    object.getVendedor().setCantidadMonetaria(disponible);
+                }
+            }
+        }
+        return object;
     }
 
     @Override
@@ -207,5 +280,9 @@ public class PedidoBoImpl implements PedidoBo {
 
     public void setInventarioBo(InventarioBo inventarioBo) {
         this.inventarioBo = inventarioBo;
+    }
+
+    public void setNotaVentaBo(NotaVentaBo notaVentaBo) {
+        this.notaVentaBo = notaVentaBo;
     }
 }

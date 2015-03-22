@@ -16,6 +16,7 @@
         <property name="detalleBo" ref="detallePedidoService" />              
         <property name="vendedorBo" ref="vendedoresService" />
         <property name="inventarioBo" ref="inventarioService" />
+        <property name="notaVentaBo" ref="notaVentaService" />
     </bean>
     
     <bean id="pedidoDao" class="mx.com.villavicencio.almacen.system.pedidos.pedido.dao.impl.PedidoDaoImpl">

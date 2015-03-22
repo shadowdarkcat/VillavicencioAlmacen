@@ -8,9 +8,11 @@ import mx.com.villavicencio.almacen.system.usuario.dto.DtoUsuario;
  *
  * @author Gabriel J
  */
-public interface PedidoBo extends GenericBo<DtoUsuario, DtoPedido>{
+public interface PedidoBo extends GenericBo<DtoUsuario, DtoPedido> {
 
     void deleteProducto(DtoUsuario user, DtoPedido object);
-    
+
     void updateStatus(DtoUsuario user, DtoPedido object);
+
+    DtoPedido findCredito(DtoUsuario user, DtoPedido object);
 }

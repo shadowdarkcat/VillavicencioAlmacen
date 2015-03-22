@@ -10,4 +10,6 @@ import mx.com.villavicencio.almacen.system.venta.nota.nota.dto.DtoNotaVenta;
 public interface NotaVentaDao extends GenericDao<DtoNotaVenta> {
 
     DtoNotaVenta insert(DtoNotaVenta object);
+
+    Integer findByFolio(DtoNotaVenta object);
 }

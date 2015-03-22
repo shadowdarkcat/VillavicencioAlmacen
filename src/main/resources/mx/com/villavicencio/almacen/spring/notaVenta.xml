@@ -18,6 +18,7 @@
         <property name="datosBo" ref="datosPedidoService" />
         <property name="clienteBo" ref="clienteService" />
         <property name="vendedorBo" ref="vendedoresService" />
+        <property name="creditoBo" ref="creditosService" />
     </bean>
     <bean id="notaVentaDao" class="mx.com.villavicencio.almacen.system.venta.nota.nota.dao.impl.NotaVentaDaoImpl">
         <property name="dataSource" ref="dataSource" />

@@ -31,9 +31,17 @@ public class TableUtils {
         String rfc = "";
         String idCliente = "";
         String idVendedor = "";
-
+        Integer idCredito = null;
         if (!StringUtils.isReallyEmptyOrNull(pedido.getCliente().getEmpresa())) {
             DtoCliente cliente = pedido.getCliente();
+            if (cliente.getCredito() != null) {
+                if (cliente.getCredito().getIdCredito() != null) {
+                    if (cliente.getCredito().getIdCredito() != 0) {
+                        idCredito = cliente.getCredito().getIdCredito();
+                    }
+                }
+
+            }
             idCliente = StringUtils.numberToString(cliente.getIdCliente());
             nombre = cliente.getEmpresa() + " " + cliente.getRazonSocial();
             rfc = (!StringUtils.isReallyEmptyOrNull(cliente.getRfc()) ? cliente.getRfc() : "NO APLICA");
@@ -46,6 +54,14 @@ public class TableUtils {
 
         } else if (!StringUtils.isReallyEmptyOrNull(pedido.getVendedor().getNombre())) {
             DtoVendedor vendedor = pedido.getVendedor();
+            if (vendedor.getCredito() != null) {
+                if (vendedor.getCredito().getIdCredito() != null) {
+                    if (vendedor.getCredito().getIdCredito() != 0) {
+                        idCredito = vendedor.getCredito().getIdCredito();
+                    }
+                }
+
+            }
             idVendedor = StringUtils.numberToString(vendedor.getIdVendedor());
             nombre = vendedor.getNombre() + " " + vendedor.getApellidoPaterno() + " " + vendedor.getApellidoMaterno();
             rfc = (!StringUtils.isReallyEmptyOrNull(vendedor.getRfc()) ? vendedor.getRfc() : "NO APLICA");
@@ -60,9 +76,12 @@ public class TableUtils {
         sb.append("<form id='frmSurtePedido'>")
                 .append("<img src='").append(context).append("/image/logo.jpg' style='width: 75px; height: 75px; position: absolute; margin-top: 5px;' />")
                 .append("<label style='margin: 0px 0px 0px 635px;' class='text-muted'>NOTA PEDIDO </label>")
-                .append("<br /><br /><br /><br /><br /><br /><br />")
+                .append("<br /><br /><br /><br />")
                 .append("<input type='hidden' id='txtIdAction' name='txtIdAction' value='").append(idAction).append("' />")
+                .append("<input type='hidden' id='txtIdCredito' name='txtIdCredito' value='").append(idCredito).append("' />")
+                .append("<input type='hidden' id='txtLimiteCredito' name='txtLimiteCredito' />")
                 .append("<input type='hidden' id='txtTipoAutorizacion' name='txtTipoAutorizacion' />")
+                .append("<input type='hidden' id='txtFechaPago' name='txtFechaPago' />")
                 .append("<input type='hidden' id='txtUser' name='txtUser' />")
                 .append("<input type='hidden' id='txtFueraRango' name='txtFueraRango' value='false' />  ")
                 .append("<input type='hidden' id='txtIdPedido' name='txtIdPedido' value='").append(pedido.getIdPedido()).append("' />")
@@ -73,14 +92,14 @@ public class TableUtils {
                 .append("<tbody><tr><td style='text-align: center;'><input type='text' id='txtFecha' name='txtFecha' value='").append(DateUtils.dateToString(DateUtils.dateNow())).append("'readonly='readOnly' /></td>")
                 .append("<td style='text-align: center;'><input type='text' id='txtFolio' name='txtFolio' value='").append(pedido.getFolio()).append("' readonly='readOnly' /></td>")
                 .append("</tr></tbody></table><br/>")
-                .append("<table><thead><tr><th style='text-align: center;' class='text-muted'>CLIENTE</th></tr></thead>")
-                .append("<tbody><tr><td><strong><label id='lblNombre' class='text-muted'>NOMBRE: </label></strong><input type='text' id='txtNombreCliente' name='txtNombreCliente' value='").append(nombre).append("' readOnly = 'readOnly' /></td></tr>")
-                .append("<tr><td><strong><label id='lblDireccion' class='text-muted'>DIRECCI&Oacute;N :</label></strong> <input type='text' id='txtDireccion' name='txtDireccion' value='").append(direccion).append("' readOnly='readOnly' /> </td></tr>")
-                .append("<tr><td><strong><label id='lblRfc' class='text-muted'><strong>R.F.C. : </label></strong><input type='text' id='txtRfc' name='txtRfc' value='").append(rfc).append("' readOnly='readOnly' /></td></tr>")
+                .append("<table style='width: 1236px;'><thead><tr><th style='text-align: center;' class='text-muted'>CLIENTE</th></tr></thead>")
+                .append("<tbody><tr><td><strong><label id='lblNombre' class='text-muted'>NOMBRE: </label></strong><input type='text' id='txtNombreCliente' name='txtNombreCliente' value='").append(nombre).append("' readOnly = 'readOnly' style='width: 1126px; margin: 0px 0px 0px 29px;' /></td></tr>")
+                .append("<tr><td><strong><label id='lblDireccion' class='text-muted'>DIRECCI&Oacute;N :</label></strong> <input type='text' id='txtDireccion' name='txtDireccion' value='").append(direccion).append("' readOnly='readOnly' style='width: 1126px;' /> </td></tr>")
+                .append("<tr><td><strong><label id='lblRfc' class='text-muted'><strong>R.F.C. : </label></strong><input type='text' id='txtRfc' name='txtRfc' value='").append(rfc).append("' readOnly='readOnly' style='margin: 0px 0px 0px 43px; width: 351px;' /></td></tr>")
                 .append("</tbody></table>")
                 .append("<table id='tblListNotaPedido' class='table table-bordered table-hover'><thead><tr>")
                 .append("<th style='text-align: center;' class='text-muted'>CANTIDAD</th><th style='text-align: center;' class='text-muted'>DESCRIPCION</th>")
-                .append("<th style='text-align: center;' class='text-muted'>KGS.</th><th style='text-align: center;' class='text-muted'>PRECIO U.</th><th style='text-align: center;' class='text-muted'>INVENTARIO</th>")
+                .append("<th style='text-align: center;' class='text-muted'>KGS.</th><th style='text-align: center; display: none;' class='text-muted'>PRECIO U.</th><th style='text-align: center;' class='text-muted'>INVENTARIO</th>")
                 .append("<th style='text-align: center;' class='text-muted'>EXTRAS</th><th style='text-align: center;' class='text-muted'>ELIMINAR</th>")
                 .append("</tr></thead> ")
                 .append("<tbody>");
@@ -90,65 +109,45 @@ public class TableUtils {
             inventario.setNombreProducto(detalles.getNombreProducto());
             BigDecimal minimo = detalles.getPesoMinimo().multiply(NumberUtils.integerToBigDecimal(detalles.getCantidadPiezas()));
             BigDecimal maximo = detalles.getPesoMaximo().multiply(NumberUtils.integerToBigDecimal(detalles.getCantidadPiezas()));
-            Boolean isAgotado = inventarioBo.isAgotado(user, inventario);
             inventario = inventarioBo.getExistencia(user, inventario);
             BigDecimal existenciaInventario = NumberUtils.integerToBigDecimal(inventario.getCantidadExistencia());
             BigDecimal cantidadPiezas = NumberUtils.integerToBigDecimal(detalles.getCantidadPiezas());
             BigDecimal excedido;
             excedido = existenciaInventario.subtract(cantidadPiezas);
+
+            sb.append("<tr class='table table-bordered table-hover' id='trNotaPedido").append(index).append("'>");
             if (excedido.compareTo(BigDecimal.ZERO) < 0) {
                 excedido = excedido.multiply(new BigDecimal(-1));
-            }
-            sb.append("<tr class='table table-bordered table-hover' id='trNotaPedido").append(index).append("'>");
-            if (detalles.getCantidadPiezas() < inventario.getCantidadExistencia()) {
-                sb.append("<td style='text-align: center; width:25px;' ><input type='text' id='txtArrayCantidad").append(index).append("' name ='txtArrayCantidad").append(index).append("' value='").append(detalles.getCantidadPiezas()).append("' readOnly ='readOnly' /></td>");
-            } else if ((inventario.getCantidadExistencia() <= 0) && (isAgotado)) {
                 sb.append("<td style='text-align: center; width:25px;' ><input type='text' id='txtArrayCantidad").append(index).append("' name ='txtArrayCantidad").append(index).append("' value='").append(detalles.getCantidadPiezas()).append("' readOnly ='readOnly' />")
-                        .append("<label id='lblErrorCantidad").append(index).append("' title='Existencia en inventario ").append(inventario.getCantidadExistencia()).append("'>Excede inventario</label><input type='hidden' id='txtErrorInventario' name='txtErrortxtErrorInventario' value='true' />")
-                        .append("<input type='hidden' id='txtArrayExcedido").append(index).append("' name='txtArrayExcedido").append(index).append("' value ='").append(excedido).append("'readonly='readOnly'/></td>");
-            } else if ((detalles.getCantidadPiezas() > inventario.getCantidadExistencia()) && (isAgotado)) {
-                sb.append("<td style='text-align: center; width:25px;' ><input type='text' id='txtArrayCantidad").append(index).append("' name ='txtArrayCantidad").append(index).append("' value='").append(detalles.getCantidadPiezas()).append("' readOnly ='readOnly' />")
-                        .append("<label id='lblErrorCantidad").append(index).append("' title='Existencia en inventario ").append(inventario.getCantidadExistencia()).append("'>Excede inventario</label><input type='hidden' id='txtErrorInventario' name='txtErrortxtErrorInventario' value='true' />")
+                        .append("<label id='lblErrorCantidad").append(index).append("' title='Existencia en inventario ").append(inventario.getCantidadExistencia()).append(" pzas.'>Excede inventario</label><input type='hidden' id='txtErrorInventario' name='txtErrortxtErrorInventario' value='true' />")
                         .append("<input type='hidden' id='txtArrayExcedido").append(index).append("' name='txtArrayExcedido").append(index).append("' value ='").append(excedido).append("'readonly='readOnly'/></td>");
             } else {
                 sb.append("<td style='text-align: center; width:25px;' ><input type='text' id='txtArrayCantidad").append(index).append("' name ='txtArrayCantidad").append(index).append("' value='").append(detalles.getCantidadPiezas()).append("' readOnly ='readOnly' /></td>");
             }
             sb.append("<td style='text-align: center; width:25px;'><input type='text' id='txtArrayNombreProducto").append(index).append("' name='txtArrayNombreProducto").append(index).append("' value='").append(detalles.getNombreProducto()).append("' readOnly='redOnly' /></td>");
-            if (!isAgotado) {
-                sb.append("<td style='text-align: center; width:25px;'><input type='text' id='txtArrayKilos").append(index).append("' name='txtArrayKilos").append(index).append("'  readOnly='readOnly' value = '0.00'/></td>");
+            if (Objects.equals(detalles.getIsMuestra(), Boolean.TRUE)) {
+                sb.append("<td style='text-align: center; width:25px;'>* <input type='text' id='txtArrayKilos").append(index).append("' name='txtArrayKilos").append(index).append("' class='required' onBlur='isVacio(this,").append(index).append(");' onKeyUp='cuenta(this,").append(minimo).append(",").append(maximo).append(",").append(index).append(");' /><label id='lblError").append(index).append("' style='display: none;'>Peso fuera del rango</label><label id='lblRequeridoPeso").append(index).append("' style='display: none;'>Campo requerido</label></td>");
+                sb.append("<td style='text-align: center; width:25px; display:none;'><input type='text' id='txtArrayCosto").append(index).append("' name='txtArrayCosto").append(index).append("' value='$0.00' readonly='readOnly'/>")
+                        .append("<input type='hidden' id='txtArrayPeso").append(index).append("' name='txtArrayPeso").append(index).append("' value='").append(detalles.getPeso()).append("' readonly='readOnly'/>")
+                        .append("<input type='hidden' id='txtArrayPesoMinimo").append(index).append("' name='txtArrayPesoMinimo").append(index).append("' value='").append(minimo).append("' readonly='readOnly'/>")
+                        .append("<input type='hidden' id='txtArrayPesoMaximo").append(index).append("' name='txtArrayPesoMaximo").append(index).append("' value='").append(maximo).append("' readonly='readOnly'/></td>");
             } else {
-                if (Objects.equals(detalles.getIsMuestra(), Boolean.TRUE)) {
-                    sb.append("<td style='text-align: center; width:25px;'><input type='text' id='txtArrayKilos").append(index).append("' name='txtArrayKilos").append(index).append("' /></td>");
-                    sb.append("<td style='text-align: center; width:25px;'><input type='text' id='txtArrayCosto").append(index).append("' name='txtArrayCosto").append(index).append("' value='$0.00' readonly='readOnly'/>")
-                            .append("<input type='hidden' id='txtArrayPeso").append(index).append("' name='txtArrayPeso").append(index).append("' value='").append(detalles.getPeso()).append("' readonly='readOnly'/>")
-                            .append("<input type='hidden' id='txtArrayPesoMinimo").append(index).append("' name='txtArrayPesoMinimo").append(index).append("' value='").append(minimo).append("' readonly='readOnly'/>")
-                            .append("<input type='hidden' id='txtArrayPesoMaximo").append(index).append("' name='txtArrayPesoMaximo").append(index).append("' value='").append(maximo).append("' readonly='readOnly'/></td>");
-                } else {
-                    sb.append("<td style='text-align: center; width:25px;'>* <input type='text' id='txtArrayKilos").append(index).append("' name='txtArrayKilos").append(index).append("' class='required' onBlur='isVacio(this,").append(index).append(");' onKeyUp='cuenta(this,").append(detalles.getPesoMinimo()).append(",").append(detalles.getPesoMaximo()).append(",").append(index).append(");' /><label id='lblError").append(index).append("' style='display: none;'>Peso fuera del rango</label><label id='lblRequeridoPeso").append(index).append("' style='display: none;'>Campo requerido</label></td>");
-                    sb.append("<td style='text-align: center; width:25px;'><input type='text' id='txtArrayCosto").append(index).append("' name='txtArrayCosto").append(index).append("' value='").append(NumberUtils.formatMoney(detalles.getCostoUnitario())).append("' readonly='readOnly'/>")
-                            .append("<input type='hidden' id='txtArrayPeso").append(index).append("' name='txtArrayPeso").append(index).append("' value='").append(detalles.getPeso()).append("' readonly='readOnly'/>")
-                            .append("<input type='hidden' id='txtArrayPesoMinimo").append(index).append("' name='txtArrayPesoMinimo").append(index).append("' value='").append(minimo).append("' readonly='readOnly'/>")
-                            .append("<input type='hidden' id='txtArrayPesoMaximo").append(index).append("' name='txtArrayPesoMaximo").append(index).append("' value='").append(maximo).append("' readonly='readOnly'/></td>");
-                }
+                sb.append("<td style='text-align: center; width:25px;'>* <input type='text' id='txtArrayKilos").append(index).append("' name='txtArrayKilos").append(index).append("' class='required' onBlur='isVacio(this,").append(index).append(");' onKeyUp='cuenta(this,").append(minimo).append(",").append(maximo).append(",").append(index).append(");' /><label id='lblError").append(index).append("' style='display: none;'>Peso fuera del rango</label><label id='lblRequeridoPeso").append(index).append("' style='display: none;'>Campo requerido</label></td>");
+                sb.append("<td style='text-align: center; width:25px; display:none;'><input type='text' id='txtArrayCosto").append(index).append("' name='txtArrayCosto").append(index).append("' value='").append(NumberUtils.formatMoney(detalles.getCostoUnitario())).append("' readonly='readOnly'/>")
+                        .append("<input type='hidden' id='txtArrayPeso").append(index).append("' name='txtArrayPeso").append(index).append("' value='").append(detalles.getPeso()).append("' readonly='readOnly'/>")
+                        .append("<input type='hidden' id='txtArrayPesoMinimo").append(index).append("' name='txtArrayPesoMinimo").append(index).append("' value='").append(minimo).append("' readonly='readOnly'/>")
+                        .append("<input type='hidden' id='txtArrayPesoMaximo").append(index).append("' name='txtArrayPesoMaximo").append(index).append("' value='").append(maximo).append("' readonly='readOnly'/></td>");
             }
-            if (!isAgotado) {
-                sb.append("<td style='text-align: center; width:25px;'><input type='text' id='txtArrayCosto").append(index).append("' name='txtArrayCosto").append(index).append("' value='$0.00' readonly='readOnly'/>")
-                        .append("<td style='text-align: center; width:25px;'><input type='checkbox' id='existencia").append(index).append("' name='existencia").append(index).append("' value ='1' onClick='return false' checked='checked' > Agotado </td>")
-                        .append("<td style='text-align: center; width:25px;'><input type='checkbox' id='muestra").append(index).append("' name='muestra").append(index).append("' value='2' onClick='return false'>Muestra")
+            if (Objects.equals(detalles.getIsMuestra(), Boolean.TRUE)) {
+                sb.append("<td style='text-align: center; width:25px;'><input type='checkbox' id='existencia").append(index).append("' name='existencia").append(index).append("' value ='1' onClick='agotado(this,").append("txtArrayKilos").append(index).append(",").append("txtArrayCosto").append(index).append(",\"").append(NumberUtils.formatMoney(detalles.getCostoUnitario())).append("\",").append(index).append(");' > Agotado </td>")
+                        .append("<td style='text-align: center; width:25px;'> <input type='checkbox' id='muestra").append(index).append("' name='muestra").append(index).append("' value='2' onClick='return false' checked='checked'> Muestra")
                         .append("<input type='hidden' id='txtArrayComisiones").append(index).append("' name='txtArrayComisiones").append(index).append("' readOnly='readOnly' value ='").append(detalles.getComision()).append("'/>")
                         .append("</td>");
             } else {
-                if (Objects.equals(detalles.getIsMuestra(), Boolean.TRUE)) {
-                    sb.append("<td style='text-align: center; width:25px;'><input type='checkbox' id='existencia").append(index).append("' name='existencia").append(index).append("' value ='1' onClick='return false' > Agotado </td>")
-                            .append("<td style='text-align: center; width:25px;'> <input type='checkbox' id='muestra").append(index).append("' name='muestra").append(index).append("' value='2' onClick='return false' checked='checked'> Muestra")
-                            .append("<input type='hidden' id='txtArrayComisiones").append(index).append("' name='txtArrayComisiones").append(index).append("' readOnly='readOnly' value ='").append(detalles.getComision()).append("'/>")
-                            .append("</td>");
-                } else {
-                    sb.append("<td style='text-align: center; width:25px;'><input type='checkbox' id='existencia").append(index).append("' name='existencia").append(index).append("' value ='1' onClick='return false' > Agotado </td>")
-                            .append("<td style='text-align: center; width:25px;'> <input type='checkbox' id='muestra").append(index).append("' name='muestra").append(index).append("' value='2' onClick='return false' > Muestra")
-                            .append("<input type='hidden' id='txtArrayComisiones").append(index).append("' name='txtArrayComisiones").append(index).append("' readOnly='readOnly' value ='").append(detalles.getComision()).append("'/>")
-                            .append("</td>");
-                }
+                sb.append("<td style='text-align: center; width:25px;'><input type='checkbox' id='existencia").append(index).append("' name='existencia").append(index).append("' value ='1' onClick='agotado(this,").append("txtArrayKilos").append(index).append(",").append("txtArrayCosto").append(index).append(",\"").append(NumberUtils.formatMoney(detalles.getCostoUnitario())).append("\",").append(index).append(");' > Agotado </td>")
+                        .append("<td style='text-align: center; width:25px;'> <input type='checkbox' id='muestra").append(index).append("' name='muestra").append(index).append("' value='2' onClick='return false' > Muestra")
+                        .append("<input type='hidden' id='txtArrayComisiones").append(index).append("' name='txtArrayComisiones").append(index).append("' readOnly='readOnly' value ='").append(detalles.getComision()).append("'/>")
+                        .append("</td>");
             }
             sb.append("<td style='text-align: center; width:25px;'><img id='del' src='").append(context).append("/image/remove_cart.png' width='24' height='24' onClick='removeData(").append(pedido.getIdPedido()).append(",").append(detalles.getIdDetallePedido()).append(",\"").append(detalles.getNombreProducto()).append("\",\"").append(pedido.getFolio()).append("\");'")
                     .append("title='Elimina el producto ").append(detalles.getNombreProducto()).append(" de la nota con folio \"").append(pedido.getFolio()).append("\"' />")
@@ -180,6 +179,7 @@ public class TableUtils {
                 .append("<label style='margin: 0px 0px 0px 320px;' class='text-muted'>NOTA VENTA </label>")
                 .append("<br /><br /><br /><br /><br /><br />")
                 .append("<input type='hidden' id='txtIdAction' name='txtIdAction' value='").append(action).append("' />")
+                .append("<input type='hidden' id='txtIdCredito' name='txtIdCredito' value='").append(nota.getIdCredito()).append("' />")
                 .append("<input type='hidden' id='txtAutorizado' name='txtAutorizado' value='")
                 .append(strNota).append("' />")
                 .append("<input type='hidden' id='txtIdPedido' name='txtIdPedido' value='").append(nota.getPedido().getIdPedido()).append("' />")
@@ -209,7 +209,7 @@ public class TableUtils {
         form.append("</td></tr></tbody></table>");
 
         table.append("<br/> <table id='tblListNota' align='center' class='table table-bordered table-hover'  style='height: 70px;'>")
-                .append(" <thead><tr><th style='text-align: center; width:25px;' >CANTIDAD</th><th style='text-align: center; width:25px;' >DESCRIPCION</th><th style='text-align: center; width:25px;' >KGS.</th><th style='text-align: center; width:25px;' >PRECIO U.</th><th style='text-align: center; width:25px;' >TOTAL</th><th style='text-align: center; width:25px;' >OBSERVACIONES</th></tr></thead> <tbody>");
+                .append(" <thead><tr><th style='text-align: center; width:25px;' >CANTIDAD</th><th style='text-align: center; width:25px;' >DESCRIPCION</th><th style='text-align: center; width:25px;' >KGS.</th><th style='text-align: center; width:25px; display:none;' >PRECIO U.</th><th style='text-align: center; width:25px;' >TOTAL</th><th style='text-align: center; width:25px;' >OBSERVACIONES</th></tr></thead> <tbody>");
 
         for (DtoDetalleNotaVenta detalles : nota.getDetalles()) {
             String desc = detalles.getNombreProducto();
@@ -240,7 +240,7 @@ public class TableUtils {
                     .append("<td>")
                     .append("<input type='text' id='txtArrayKilos[]' name='txtArrayKilos[]' class='required' value='")
                     .append(detalles.getCantidadKilos()).append("' readOnly='readOnly' /></td>")
-                    .append("<td>")
+                    .append("<td style='display: none;'>")
                     .append("<input type='text' id='txtArrayCosto[]' name='txtArrayCosto[]' value='")
                     .append(NumberUtils.formatMoney(detalles.getCostoUnitario())).append("' readonly='readOnly' /></td>")
                     .append("<td>")
@@ -254,8 +254,11 @@ public class TableUtils {
         }
         table.append(content);
         table.append("</tbody></table>");
-        form.append(table)
-                .append("<br/><table class='table table-bordered table-hover' border='1' style='width: 1042px;'><tr>")
+        form.append(table);
+        if (!StringUtils.isReallyEmptyOrNull(nota.getObservaciones())) {
+            form.append("<br/>OBSERVACIONES:<br/>").append(nota.getObservaciones());
+        }
+        form.append("<br/><table class='table table-bordered table-hover' border='1' style='width: 1042px;'><tr>")
                 .append("<td><label class='text-muted'>CANTIDAD CON LETRA :<br/>")
                 .append(TraductorUtils.traducir(total)).append("</label></td>")
                 .append("<td><table class='table table-bordered table-hover' border='1'><tr>")

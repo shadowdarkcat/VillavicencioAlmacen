@@ -2,6 +2,7 @@ package mx.com.villavicencio.almacen.system.productos.dto;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import mx.com.villavicencio.almacen.system.inventario.dto.DtoInventario;
 
 /**
  *
@@ -23,6 +24,7 @@ public class DtoProducto {
     private BigDecimal comision;
     private Integer piezas;
     private Boolean isAgotado;
+    private DtoInventario inventario;
 
     public Integer getIdProducto() {
         return idProducto;
@@ -134,5 +136,13 @@ public class DtoProducto {
 
     public void setIsAgotado(Boolean isAgotado) {
         this.isAgotado = isAgotado;
+    }
+
+    public DtoInventario getInventario() {
+        return inventario;
+    }
+
+    public void setInventario(DtoInventario inventario) {
+        this.inventario = inventario;
     }
 }

@@ -123,6 +123,7 @@ public class PedidosController extends HttpServlet {
                     pedido.setOpcion(GenericTypes.THREE);
                     pedidoBo.updateStatus(user, pedido);
                     pedido = pedidoBo.findById(user, pedido);
+                    pedido = pedidoBo.findCredito(user, pedido);
                     pedido.setNotaPedido(TableUtils.createTableNotaPedido(request.getParameter(Variables.CONTEXT), NumberUtils.stringToNumber(request.getParameter(Text.ID_ACTION)), pedido, user, inventarioBo));
                     out = response.getWriter();
                     out.print(gson.toJson(pedido));
@@ -179,7 +180,7 @@ public class PedidosController extends HttpServlet {
                             producto = this.productoBo.findProductoPersonalizadoVendedorById(user, producto, idVendedor);
                         }
                         inventario.setNombreProducto(producto.getNombreProducto());
-                        producto.setIsAgotado(this.inventarioBo.isAgotado(user, inventario));
+                        producto.setInventario(this.inventarioBo.getExistencia(user, inventario));
                         out.print(gson.toJson(producto));
                     }
                     break;

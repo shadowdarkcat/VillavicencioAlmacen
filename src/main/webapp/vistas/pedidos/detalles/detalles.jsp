@@ -73,10 +73,22 @@
                                                     <td style="text-align: center">
                                                         <c:if test="${not empty pedidos.cliente.empresa}">
                                                             <input type="hidden" id="txtIdCliente" name="txtIdCliente" value="${pedidos.cliente.idCliente}" readonly="readOnly" />
+                                                            <input type="hidden" id="txtFechaLimiteC" name="txtFechaLimiteC" value="${pedidos.cliente.credito.fechaPago}" readonly="readOnly"/>
+                                                            <input type="hidden" id="txtDisponibleC" name="txtDisponibleC" value="${pedidos.cliente.cantidadMonetaria}" readonly="readOnly"/>
+                                                            <input type="hidden" id="txtFoliosC" name="txtFoliosC" value="${pedidos.cliente.credito.folioNota}" readonly="readOnly"/>
+                                                            <c:if test="${pedidos.cliente.credito.tipoCredito eq 'CONTRANOTA'}">
+                                                                <input type="hidden" id="txtContraNotaC" name="txtContraNotaC" value="${pedidos.cliente.credito.folioNota}" readonly="readOnly"/>
+                                                            </c:if>                                                            
                                                             ${pedidos.cliente.empresa} ${pedidos.cliente.razonSocial}                                                            
                                                         </c:if>
                                                         <c:if test="${not empty pedidos.vendedor}">                                                                
                                                             <input type="hidden" id="txtIdVendedor" name="txtIdVendedor" value="${pedidos.vendedor.idVendedor}" readonly="readOnly" />
+                                                            <input type="hidden" id="txtFechaLimiteV" name="txtFechaLimiteV" value="${pedidos.vendedor.credito.fechaPago}" readonly="readOnly"/>
+                                                            <input type="hidden" id="txtDisponibleV" name="txtDisponibleV" value="${pedidos.vendedor.cantidadMonetaria}" readonly="readOnly"/>
+                                                            <input type="hidden" id="txtFoliosV" name="txtFoliosV" value="${pedidos.vendedor.credito.folioNota}" readonly="readOnly"/>
+                                                            <c:if test="${pedidos.vendedor.credito.tipoCredito eq 'CONTRANOTA'}">
+                                                                <input type="hidden" id="txtContraNotaV" name="txtContraNotaV" value="${pedidos.vendedor.credito.folioNota}" readonly="readOnly"/>
+                                                            </c:if>
                                                             ${pedidos.vendedor.nombre} ${pedidos.vendedor.apellidoPaterno} ${pedidos.vendedor.apellidoMaterno}
                                                         </c:if>
                                                     </td>
@@ -123,6 +135,27 @@
             </tr>
         </table>
     </div>
+    
+    <div id="divNotaPedidoErrorCredito" title="Error">
+        <table>
+            <tr>
+                <td style="text-align: center;">
+                    <p><span class="text-muted" >No se puede surtir el pedido, presenta un adeudo por contranota<br/>Folio de la nota: <lbl id="lblFolioNota"></lbl></span></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <div id="divNotaPedidoErrorMonetario" title="Error">
+        <table>
+            <tr>
+                <td style="text-align: center;">
+                    <p><span class="text-muted" >No se puede surtir el pedido, presenta un cr&eacute;dito con saldo deudor</span></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
     <c:if test="${ticket == false}">
         <div id="divImpresionTicket" title="Error">
             <table>

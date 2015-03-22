@@ -36,4 +36,18 @@ public class View extends SqlSentence {
         VIEW_NOTA_VENTA = qry.toString();
     }
     /* FIN QUERY NOTA VENTA */
+
+    /* QUERY NOTA VENTA POR FOLIO */
+    public static final String VIEW_NOTA_VENTA_FOLIO;
+
+    static {
+        StringBuilder qry = new StringBuilder();
+        qry.append(SELECT).append(NEW_LINE).append(TAB).append(SqlNotaVenta.ID_NOTA_VENTA).append(NEW_LINE)
+                .append(FROM).append(NEW_LINE).append(TAB).append(TBL_NOTA_VENTA)
+                .append(NEW_LINE).append(WHERE).append(NEW_LINE).append(TAB)
+                .append(SqlNotaVenta.FOLIO).append(EQUALS).append(PARAMETER)
+                .append(SEMICOLON);
+        VIEW_NOTA_VENTA_FOLIO = qry.toString();
+    }
+    /* FIN QUERY NOTA VENTA POR FOLIO */
 }

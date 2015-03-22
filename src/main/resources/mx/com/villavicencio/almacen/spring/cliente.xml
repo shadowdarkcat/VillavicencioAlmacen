@@ -11,10 +11,8 @@
 
     <bean id="clienteService" class="mx.com.villavicencio.almacen.system.cliente.bo.impl.ClienteBoImpl">
         <property name="clienteDao" ref="clienteDao" />
-        <property name="creditoBo" ref="creditosService" />
-        <property name="datosCreditoBo" ref="datosCreditoService" />
-        <property name="productoBo" ref="productoService" />        
-        <property name="datosBo" ref="datosService" />
+        <property name="productoBo" ref="productoService" /> 
+        <property name="creditoBo" ref="creditosService" />                   
         <property name="vendedorBo" ref="vendedoresService" />
     </bean>
     

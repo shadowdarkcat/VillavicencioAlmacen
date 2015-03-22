@@ -10,6 +10,9 @@ import mx.com.villavicencio.almacen.properties.Property;
 import mx.com.villavicencio.almacen.system.cliente.bo.ClienteBo;
 import mx.com.villavicencio.almacen.system.cliente.dto.DtoCliente;
 import mx.com.villavicencio.almacen.system.cliente.factory.ClienteFactory;
+import mx.com.villavicencio.almacen.system.credito.bo.CreditoBo;
+import mx.com.villavicencio.almacen.system.credito.dto.DtoCredito;
+import mx.com.villavicencio.almacen.system.credito.factory.CreditoFactory;
 import mx.com.villavicencio.almacen.system.movimientos.cargos.bo.CargosBo;
 import mx.com.villavicencio.almacen.system.movimientos.cargos.dto.DtoCargos;
 import mx.com.villavicencio.almacen.system.movimientos.cargos.factory.CargosFactory;
@@ -31,6 +34,7 @@ import mx.com.villavicencio.almacen.system.venta.nota.detalle.factory.DetalleNot
 import mx.com.villavicencio.almacen.system.venta.nota.nota.bo.NotaVentaBo;
 import mx.com.villavicencio.almacen.system.venta.nota.nota.dao.NotaVentaDao;
 import mx.com.villavicencio.almacen.system.venta.nota.nota.dto.DtoNotaVenta;
+import mx.com.villavicencio.almacen.utils.StringUtils;
 import mx.com.villavicencio.almacen.utils.TraductorUtils;
 
 /**
@@ -47,6 +51,7 @@ public class NotaVentaBoImpl implements NotaVentaBo {
     private DatosPedidoBo datosBo;
     private ClienteBo clienteBo;
     private VendedorBo vendedorBo;
+    private CreditoBo creditoBo;
 
     @Override
     public Collection<DtoNotaVenta> findAll(DtoUsuario user) {
@@ -91,6 +96,15 @@ public class NotaVentaBoImpl implements NotaVentaBo {
     }
 
     @Override
+    public Integer findByFolio(DtoUsuario user, DtoNotaVenta object) {
+        if ((user != null) && (user.getIdUsuario() != 0)) {
+            return this.notaVentaDao.findByFolio(object);
+        } else {
+            throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.ACCESO_DENEGADO));
+        }
+    }
+
+    @Override
     public void ingresar(DtoUsuario user, DtoNotaVenta object) {
         if ((user != null) && (user.getIdUsuario() != 0)) {
             ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO));
@@ -105,6 +119,7 @@ public class NotaVentaBoImpl implements NotaVentaBo {
         if ((user != null) && (user.getIdUsuario() != 0)) {
             DtoCargos cargos = CargosFactory.newInstance();
             DtoMovimientos movimientos = MovimientosFactory.newInstance();
+            DtoCredito credito = CreditoFactory.newInstance(object.getIdCredito());
             object = this.notaVentaDao.insert(object);
             for (DtoDetalleNotaVenta detalles : object.getDetalles()) {
                 detalles.setIdNotaVenta(object.getIdNotaVenta());
@@ -118,9 +133,17 @@ public class NotaVentaBoImpl implements NotaVentaBo {
             movimientos.setOpcion(object.getOpcion());
             movimientos.setIdCargos(cargos.getIdCargos());
             movimientos.setIdNotaVenta(object.getIdNotaVenta());
+            movimientos.setIdCredito(object.getIdCredito());
             this.movimientosBo.ingresar(user, movimientos);
             object.getPedido().setOpcion(GenericTypes.THREE);
             this.pedidoBo.updateStatus(user, object.getPedido());
+            DtoCredito findById = this.creditoBo.findById(user, credito);
+            if (!StringUtils.isReallyEmptyOrNull(findById.getFolioNota())) {
+                credito = findById;
+                credito.setFolioNota(findById.getFolioNota() + "," + object.getFolio());
+                credito.setOpcion(GenericTypes.MODIFY);
+                this.creditoBo.modificar(user, credito);
+            }
         } else {
             throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.ACCESO_DENEGADO));
         }
@@ -176,5 +199,9 @@ public class NotaVentaBoImpl implements NotaVentaBo {
 
     public void setVendedorBo(VendedorBo vendedorBo) {
         this.vendedorBo = vendedorBo;
+    }
+
+    public void setCreditoBo(CreditoBo creditoBo) {
+        this.creditoBo = creditoBo;
     }
 }

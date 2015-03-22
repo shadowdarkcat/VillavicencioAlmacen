@@ -11,4 +11,6 @@ import mx.com.villavicencio.almacen.system.venta.nota.nota.dto.DtoNotaVenta;
 public interface NotaVentaBo extends GenericBo<DtoUsuario, DtoNotaVenta> {
 
     DtoNotaVenta insert(DtoUsuario user, DtoNotaVenta object);
+
+    Integer findByFolio(DtoUsuario user, DtoNotaVenta object);
 }

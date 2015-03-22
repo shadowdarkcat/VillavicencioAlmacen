@@ -40,6 +40,7 @@ public class DtoVendedor {
     private Collection<DtoProducto> personalizados;
     private Collection<DtoVendedor> vendedores;
     private Integer opcion;
+    private BigDecimal cantidadMonetaria;
 
     public Integer getIdVendedor() {
         return idVendedor;
@@ -271,6 +272,14 @@ public class DtoVendedor {
 
     public void setCredito(DtoCredito credito) {
         this.credito = credito;
+    }
+
+    public BigDecimal getCantidadMonetaria() {
+        return cantidadMonetaria;
+    }
+
+    public void setCantidadMonetaria(BigDecimal cantidadMonetaria) {
+        this.cantidadMonetaria = cantidadMonetaria;
     }
 
 }

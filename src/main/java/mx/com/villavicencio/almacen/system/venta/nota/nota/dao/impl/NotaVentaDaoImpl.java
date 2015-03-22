@@ -56,6 +56,18 @@ public class NotaVentaDaoImpl extends JdbcDaoSupport implements NotaVentaDao {
     }
 
     @Override
+    public Integer findByFolio(DtoNotaVenta object) {
+        Object[] args = {object.getFolio()};
+        try {
+            return getJdbcTemplate().queryForObject(View.VIEW_NOTA_VENTA_FOLIO, args, new IdNotaVentaRowMapper());
+        } catch (DataAccessException ex) {
+            ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.ERROR_FIND)
+                    + "\n" + NotaVentaDaoImpl.class.getSimpleName(), ex);
+            throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.ERROR_FIND));
+        }
+    }
+
+    @Override
     public void ingresar(DtoNotaVenta object) {
         ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO));
         throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO));
@@ -107,7 +119,7 @@ public class NotaVentaDaoImpl extends JdbcDaoSupport implements NotaVentaDao {
         source.addValue(SqlNotaVenta.RFC, object.getRfc(), Types.VARCHAR);
         source.addValue(SqlNotaVenta.STATUS_NOTA_VENTA, object.getStatusNotaVenta(), Types.CHAR);
         source.addValue(SqlNotaVenta.OBSERVACIONES, object.getObservaciones(), Types.VARCHAR);
-        source.addValue(SqlPedido.ID_PEDIDO, object.getPedido().getIdPedido(),Types.INTEGER);
+        source.addValue(SqlPedido.ID_PEDIDO, object.getPedido().getIdPedido(), Types.INTEGER);
         return source;
     }
 
@@ -130,6 +142,14 @@ public class NotaVentaDaoImpl extends JdbcDaoSupport implements NotaVentaDao {
                             rs.getInt(SqlPedido.ID_PEDIDO))
             );
             return notaVenta;
+        }
+    }
+
+    private static class IdNotaVentaRowMapper implements RowMapper<Integer> {
+
+        @Override
+        public Integer mapRow(ResultSet rs, int i) throws SQLException {
+            return rs.getInt(SqlNotaVenta.ID_NOTA_VENTA);
         }
     }
 }

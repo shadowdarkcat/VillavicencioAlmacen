@@ -12,10 +12,8 @@ import mx.com.villavicencio.almacen.system.cliente.dao.ClienteDao;
 import mx.com.villavicencio.almacen.system.cliente.dto.DtoCliente;
 import mx.com.villavicencio.almacen.system.cliente.factory.ClienteFactory;
 import mx.com.villavicencio.almacen.system.credito.bo.CreditoBo;
-import mx.com.villavicencio.almacen.system.credito.datos.bo.DatosCreditoBo;
 import mx.com.villavicencio.almacen.system.credito.dto.DtoCredito;
 import mx.com.villavicencio.almacen.system.productos.bo.ProductoBo;
-import mx.com.villavicencio.almacen.system.productos.datos.bo.DatosBo;
 import mx.com.villavicencio.almacen.system.productos.dto.DtoProducto;
 import mx.com.villavicencio.almacen.system.productos.factory.ProductoFactory;
 import mx.com.villavicencio.almacen.system.usuario.dto.DtoUsuario;
@@ -30,8 +28,6 @@ public class ClienteBoImpl implements ClienteBo {
     private ClienteDao clienteDao;
     private ProductoBo productoBo;
     private CreditoBo creditoBo;
-    private DatosBo datosBo;
-    private DatosCreditoBo datosCreditoBo;
     private VendedorBo vendedorBo;
 
     @Override
@@ -63,7 +59,7 @@ public class ClienteBoImpl implements ClienteBo {
             DtoCredito findCreditoByIdCliente = this.creditoBo.findCreditoByIdCliente(user, object.getCredito(), object.getIdCliente());
             if ((findCreditoByIdCliente != null) && (findCreditoByIdCliente.getIdCredito() != null)) {
                 object.setCredito(findCreditoByIdCliente);
-            }
+            }            
             return object;
         } else {
             ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.ACCESO_DENEGADO));
@@ -96,14 +92,14 @@ public class ClienteBoImpl implements ClienteBo {
     @Override
     public void eliminar(DtoUsuario user, DtoCliente object) {
         if ((user.getIdUsuario() != 0) && (user != null)) {
-             ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO));
+            ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO));
             throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.NO_DESARROLLADO));
         } else {
             ApplicationMessages.errorMessage(PropertiesBean.getErrorFile().getProperty(Property.ACCESO_DENEGADO));
             throw new ApplicationException(PropertiesBean.getErrorFile().getProperty(Property.ACCESO_DENEGADO));
         }
     }
-    
+
     private Collection<DtoProducto> getProductoNuevo(DtoUsuario user, Collection<DtoProducto> object) {
 
         Collection<DtoProducto> findAll = productoBo.findAll(user);
@@ -241,14 +237,6 @@ public class ClienteBoImpl implements ClienteBo {
 
     public void setCreditoBo(CreditoBo creditoBo) {
         this.creditoBo = creditoBo;
-    }
-
-    public void setDatosBo(DatosBo datosBo) {
-        this.datosBo = datosBo;
-    }
-
-    public void setDatosCreditoBo(DatosCreditoBo datosCreditoBo) {
-        this.datosCreditoBo = datosCreditoBo;
     }
 
     public void setVendedorBo(VendedorBo vendedorBo) {

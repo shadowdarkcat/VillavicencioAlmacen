@@ -106,6 +106,7 @@ public class DetalleNotaVentaDaoImpl extends JdbcDaoSupport implements DetalleNo
             detalleNotaVenta.setCantidadKilos(rs.getBigDecimal(SqlDetalleNotaVenta.CANTIDAD_KILOS));
             detalleNotaVenta.setCostoUnitario(rs.getBigDecimal(SqlProducto.COSTO_UNITARIO));
             detalleNotaVenta.setSubTotal(rs.getBigDecimal(SqlDetalleNotaVenta.SUBTOTAL));
+            detalleNotaVenta.setObservacionExcedido(rs.getString(SqlDetalleNotaVenta.OBSERVACIONES_EXCEDIDO));
             return detalleNotaVenta;
         }
     }

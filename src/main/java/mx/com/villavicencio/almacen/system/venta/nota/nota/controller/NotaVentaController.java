@@ -266,10 +266,7 @@ public class NotaVentaController extends HttpServlet {
                     + request.getParameter(Text.USER) + ". " + request.getParameter(Text.TIPO_AUTORIZACION).toUpperCase());
         }
 
-        /*if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.AUTORIZADO))) {
-         notaVenta.setObservaciones(request.getParameter(Text.AUTORIZADO));
-         }*/
-        if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.STATUS_NOTA_VENTA))) {
+         if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.STATUS_NOTA_VENTA))) {
             notaVenta.setStatusNotaVenta(request.getParameter(Text.STATUS_NOTA_VENTA).charAt(GenericTypes.ZERO));
         }
         if (!StringUtils.isReallyEmptyOrNull(request.getParameter(Text.TOTAL_VENTA))) {
@@ -325,6 +322,7 @@ public class NotaVentaController extends HttpServlet {
         String[] isMuestra = null;
         String[] subtotal = null;
         String[] observacionesExcedido = null;
+        String[] observaciones = null;
 
         if (!StringUtils.isReallyEmptyOrNull(request.getParameterValues(Text.ARRAY_PIEZAS))) {
             cantidades = request.getParameterValues(Text.ARRAY_PIEZAS);
@@ -356,7 +354,9 @@ public class NotaVentaController extends HttpServlet {
         if (!StringUtils.isReallyEmptyOrNull(request.getParameterValues(Text.ARRAY_EXCEDIDO))) {
             observacionesExcedido = request.getParameterValues(Text.ARRAY_EXCEDIDO);
         }
-
+        if (!StringUtils.isReallyEmptyOrNull(request.getParameterValues(Text.OBSERVACION_EXCEDIDO))) {
+            observaciones = request.getParameterValues(Text.OBSERVACION_EXCEDIDO);
+        }
         if (!StringUtils.isReallyEmptyOrNull(productos)) {
             for (Integer index = 0; index < productos.length; index++) {
                 DtoDetalleNotaVenta detalleNotaVenta = DetalleNotaVentaFactory.newInstance();
@@ -391,6 +391,11 @@ public class NotaVentaController extends HttpServlet {
                                 detalleNotaVenta.setObservacionExcedido(GenericTypes.NONE);
                             }
                         }
+                    }
+                }
+                if (!StringUtils.isReallyEmptyOrNull(observaciones)) {
+                    if (observaciones.length > index) {
+                        detalleNotaVenta.setObservacionExcedido(observaciones[index].toUpperCase());
                     }
                 }
                 detalles.add(detalleNotaVenta);

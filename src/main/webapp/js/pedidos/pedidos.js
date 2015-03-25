@@ -714,7 +714,7 @@ function validar() {
         if ((!fueraRango) && (!errorInventario) && (limite > 0)) {
             return false;
         } else if ((fueraRango) && (errorInventario) && (limite < 0)) {
-            if ((fecha != undefined) && (fecha != null)) {
+            if ((fecha != undefined) && (fecha != null) && (fecha != '')) {
                 text = ((text != undefined && text != '') ? (text += ', fecha de pago vencido') : ('Causa(s) : Fecha de pago vencido'));
                 $('#divAutorizarPedido').find('#lblCausa').text(text);
             }
@@ -723,7 +723,7 @@ function validar() {
             return true;
         }
         else if ((errorInventario) && (limite < 0)) {
-            if ((fecha != undefined) && (fecha != null)) {
+            if ((fecha != undefined) && (fecha != null) && (fecha != '')) {
                 text = ((text != undefined && text != '') ? (text += ', fecha de pago vencido') : ('Causa(s) : Fecha de pago vencido'));
                 $('#divAutorizarPedido').find('#lblCausa').text(text);
             }
@@ -732,7 +732,7 @@ function validar() {
             return true;
         }
         else if (errorInventario) {
-            if ((fecha != undefined) && (fecha != null)) {
+            if ((fecha != undefined) && (fecha != null) && (fecha != '')) {
                 text = ((text != undefined && text != '') ? (text += ', fecha de pago vencido') : ('Causa(s) : Fecha de pago vencido'));
                 $('#divAutorizarPedido').find('#lblCausa').text(text);
             }
@@ -741,7 +741,7 @@ function validar() {
             return true;
         }
         else if (limite < 0) {
-            if ((fecha != undefined) && (fecha != null)) {
+            if ((fecha != undefined) && (fecha != null) && (fecha != '')) {
                 text = ((text != undefined && text != '') ? (text += ', fecha de pago vencido') : ('Causa(s) : Fecha de pago vencido'));
                 $('#divAutorizarPedido').find('#lblCausa').text(text);
             }

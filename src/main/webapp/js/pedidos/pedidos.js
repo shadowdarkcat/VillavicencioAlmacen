@@ -359,7 +359,7 @@ function validarClienteVendedor(cliente, vendedor) {
         if ((Date.parse(new Date())) > Date.parse(fechaLimite)) {
             $('#divTipoAutorizacion').find('#lblCausa').text('Causa: Fecha de pago vencido');
             return false;
-        } else if (disponible < 0) {
+        } else if (disponible <= 0) {
             $('#divNotaPedidoErrorMonetario').dialog('open');
             return;
         } else if ((contraNota != null) && (contraNota != undefined)) {
@@ -373,7 +373,7 @@ function validarClienteVendedor(cliente, vendedor) {
         if ((Date.parse(new Date())) > Date.parse(fechaLimite)) {
             $('#divTipoAutorizacion').find('#lblCausa').text('Causa: Fecha de pago vencido');
             return false;
-        } else if (disponible < 0) {
+        } else if (disponible <= 0) {
             $('#divNotaPedidoErrorMonetario').dialog('open');
             return;
         } else if ((contraNota != null) && (contraNota != undefined)) {
@@ -713,7 +713,7 @@ function validar() {
         var fecha = $('#frmSurtePedido').find('#txtFechaPago').val();
         if ((!fueraRango) && (!errorInventario) && (limite > 0)) {
             return false;
-        } else if ((fueraRango) && (errorInventario) && (limite < 0)) {
+        } else if ((fueraRango) && (errorInventario) && (limite <= 0)) {
             if ((fecha != undefined) && (fecha != null) && (fecha != '')) {
                 text = ((text != undefined && text != '') ? (text += ', fecha de pago vencido') : ('Causa(s) : Fecha de pago vencido'));
                 $('#divAutorizarPedido').find('#lblCausa').text(text);
@@ -722,7 +722,7 @@ function validar() {
             $('#divAutorizarPedido').find('#lblCausa').text(text);
             return true;
         }
-        else if ((errorInventario) && (limite < 0)) {
+        else if ((errorInventario) && (limite <= 0)) {
             if ((fecha != undefined) && (fecha != null) && (fecha != '')) {
                 text = ((text != undefined && text != '') ? (text += ', fecha de pago vencido') : ('Causa(s) : Fecha de pago vencido'));
                 $('#divAutorizarPedido').find('#lblCausa').text(text);
@@ -740,7 +740,7 @@ function validar() {
             $('#divAutorizarPedido').find('#lblCausa').text(text);
             return true;
         }
-        else if (limite < 0) {
+        else if (limite <= 0) {
             if ((fecha != undefined) && (fecha != null) && (fecha != '')) {
                 text = ((text != undefined && text != '') ? (text += ', fecha de pago vencido') : ('Causa(s) : Fecha de pago vencido'));
                 $('#divAutorizarPedido').find('#lblCausa').text(text);
